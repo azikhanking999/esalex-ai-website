@@ -563,3 +563,11 @@ html { scroll-behavior: smooth; }
 
 /* off-screen sections stop animating (class toggled by app.js); scroll-linked reveals are left alone */
 .is-off *:not(.rv), .is-off *:not(.rv)::before, .is-off *:not(.rv)::after { animation-play-state: paused !important; }
+
+/* service cards link to their pages (stretched link) */
+.card-go { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.card-go::after { content: ""; position: absolute; inset: 0; border-radius: 28px; }
+.card-go svg { transition: transform .25s; }
+.card:hover .card-go svg { transform: translateX(4px); }
+.card-go:focus-visible { outline: none; }
+.card-go:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -3px; }

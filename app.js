@@ -268,5 +268,26 @@
     }
     requestAnimationFrame(frame);
   }
+  /* ---------- gentle pointer parallax on the service-page hero visual (mouse only) ---------- */
+  var vis = document.querySelector('.svc-vis');
+  if (vis && !reduce && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+    var pf = 0; var ptx = 0; var pty = 0;
+    vis.addEventListener('pointermove', function (e) {
+      var r = vis.getBoundingClientRect();
+      ptx = ((e.clientX - r.left) / r.width - 0.5) * 18;
+      ptx = Math.max(-9, Math.min(9, ptx));
+      pty = Math.max(-9, Math.min(9, ((e.clientY - r.top) / r.height - 0.5) * 18));
+      if (!pf) pf = requestAnimationFrame(function () {
+        pf = 0;
+        vis.style.setProperty('--px', ptx.toFixed(1) + 'px');
+        vis.style.setProperty('--py', pty.toFixed(1) + 'px');
+      });
+    });
+    vis.addEventListener('pointerleave', function () {
+      vis.style.setProperty('--px', '0px');
+      vis.style.setProperty('--py', '0px');
+    });
+  }
+
   initGlobe();
 })();

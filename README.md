@@ -6,10 +6,12 @@ A standalone static site: plain HTML, CSS and a little JavaScript. No framework,
 
 | File | What it is |
 |---|---|
-| `index.html` | The whole page, with SEO tags and structured data (JSON-LD) in the head |
+| `index.html` | The home page, with SEO tags and structured data (JSON-LD) in the head |
+| `services/<name>/index.html` | The four service pages (listings, product images, ads and PPC, Shopify and workflows). Generated, see "Service pages" below |
+| `service.css` | Extra styling used only by the service pages (loads after `styles.css`) |
 | `styles.css` | All styling (brand colors, DM Sans and JetBrains Mono, animations, responsive rules) |
 | `app.js` | Activity feed, rolling numbers, lazy video, off-screen animation pausing and the draggable 3D Earth |
-| `assets/` | Product photos, Earth map and posters, two short videos, brand pattern tile, share image |
+| `assets/` | Product photos, Earth map and posters, short videos, brand pattern tile, share image. `assets/hero-*.mp4/jpg` are the service-page hero loops, `assets/work/` holds portfolio images |
 | `favicon.svg` | The eSalex ai mark as a tab icon |
 | `robots.txt`, `sitemap.xml`, `llms.txt` | Search and AI-assistant files (copied from `../seo/`) |
 | `_headers` | Caching and security headers (works on Cloudflare Pages and Netlify) |
@@ -40,7 +42,31 @@ Whichever you pick, `index.html` must be at the top level of what you upload.
 3. **Share image.** `assets/og-card.jpg` is a crop of the Earth render, used when the link is shared. Replace it with a designed 1200 x 630 card when you have one.
 4. **Proof.** The three "work" cards describe real work without client names. Add names, screenshots and reviews only with each client's permission.
 5. **Claims.** Check every statement is something you can back up (founded 2018, seven platforms, human review of all output).
-6. **More pages.** The sitemap lists four service pages (`/services/...`), `/work`, `/about` and `/contact` that do not exist yet. Either build them (see `../seo/SEO-PLAYBOOK.md`) or delete those lines from `sitemap.xml` and `llms.txt`.
+6. **More pages.** The four service pages are built and listed in the sitemap. `/work`, `/about` and `/contact` are not built yet (work lives in a home-page section and on each service page), so they are not in the sitemap. Add them when you have the content.
+7. **Service-page placeholders.** `YOURDOMAIN.com` is also in every `services/*/index.html` (canonical, og: tags, JSON-LD). Replace it there too. Easiest: set `$Domain` at the top of `../build/lib.ps1` and run the build again (see below).
+
+## Service pages
+
+Each service has its own page: hero loop video, what you get, an animated four-step explainer, a work section, an Upwork track-record block, FAQ and related services. The motion graphics are built in code in the brand style (CSS only, 16 second loop, 4 seconds per step). The hero loops were made with Higgsfield (Seedance 2.5).
+
+The pages are generated from templates in `../build/` so the four stay consistent:
+
+| File | Edit it to change |
+|---|---|
+| `build/pages.ps1` | Page titles, descriptions, at-a-glance facts, the six feature cards, FAQ answers, which work cards appear, headings in the track-record and call-to-action blocks |
+| `build/pages/*.html` | The hero copy, the four steps and the animated scenes on each page |
+| `build/lib.ps1` | The domain, the portfolio items (title, image, link, description) and the pixel icons |
+| `build/shell.html` | The head, navigation and footer shared by all four pages |
+
+After any edit, run this from the `build` folder:
+
+```
+powershell -ExecutionPolicy Bypass -File build.ps1
+```
+
+**Replacing a demo project with a real one:** put the image in `site/assets/work/`, add an entry to `$WorkItems` in `lib.ps1`, then swap the `DemoCard ...` line for `WorkCard 'your-id'` in the page's `work` block in `pages.ps1`. Demo cards are always labelled "Demo project" on the page.
+
+**What is real and what is a demo:** Behance projects, the two Shopify stores and the Upwork numbers and review quote are real and public. The Upwork numbers (Top Rated Plus, 99% Job Success, 5.0 from 46 reviews, 11K+ hours) come from the lead designer's public profile, and the page says so. Everything labelled "Demo project" is a sample made to show the process, not client work. The ads and workflow pages rely on demos for now because there are no live AI-automation case studies yet.
 
 ## How it behaves
 

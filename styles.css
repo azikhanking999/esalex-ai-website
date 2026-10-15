@@ -564,10 +564,20 @@ html { scroll-behavior: smooth; }
 /* off-screen sections stop animating (class toggled by app.js); scroll-linked reveals are left alone */
 .is-off *:not(.rv), .is-off *:not(.rv)::before, .is-off *:not(.rv)::after { animation-play-state: paused !important; }
 
-/* service cards link to their pages (stretched link) */
-.card-go { margin-top: 18px; display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
-.card-go::after { content: ""; position: absolute; inset: 0; border-radius: 28px; }
-.card-go svg { transition: transform .25s; }
-.card:hover .card-go svg { transform: translateX(4px); }
-.card-go:focus-visible { outline: none; }
-.card-go:focus-visible::after { outline: 2px solid var(--accent); outline-offset: -3px; }
+/* service cards: animated Explore button (the whole card is also clickable through .card-hit) */
+.card-hit { position: absolute; inset: 0; z-index: 1; border-radius: 28px; }
+.card-go { position: relative; z-index: 2; margin-top: 24px; display: inline-flex; align-items: center; gap: 14px; min-height: 52px; padding: 6px 6px 6px 22px; border-radius: 999px;
+  background: var(--accent); color: var(--on); font: 600 16px/1 "DM Sans", sans-serif; letter-spacing: -.01em;
+  transition: background .3s, color .3s, transform .3s cubic-bezier(.34,1.56,.64,1); }
+.card-go::before { content: ""; position: absolute; inset: 0; border-radius: 999px; border: 2px solid var(--accent); opacity: 0; pointer-events: none; animation: bring 2.8s ease-out infinite; animation-delay: var(--gd, 0s); }
+.card-go .ga { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; overflow: hidden; transition: background .3s, color .3s; }
+.card-go .ga svg { grid-area: 1 / 1; transition: transform .4s cubic-bezier(.65,0,.35,1); }
+.card-go .ga svg:nth-child(1) { animation: gonudge 3s ease-in-out infinite; animation-delay: var(--gd, 0s); }
+.card-go .ga svg:nth-child(2) { transform: translateX(-220%); }
+.es .card:hover .card-go, .es .card-go:hover { background: var(--paper); color: var(--ink); transform: translateY(-2px); }
+.card:hover .card-go .ga, .card-go:hover .ga { background: var(--accent); color: var(--on); }
+.card:hover .card-go .ga svg:nth-child(1), .card-go:hover .ga svg:nth-child(1) { animation: none; transform: translateX(220%); }
+.card:hover .card-go .ga svg:nth-child(2), .card-go:hover .ga svg:nth-child(2) { transform: translateX(0); }
+.card-go:active { transform: scale(.96); }
+.card-go:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+@keyframes gonudge { 0%, 62%, 100% { transform: translateX(0); } 74% { transform: translateX(5px); } 86% { transform: translateX(-1px); } }

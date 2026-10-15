@@ -8,6 +8,7 @@ A standalone static site: plain HTML, CSS and a little JavaScript. No framework,
 |---|---|
 | `index.html` | The home page, with SEO tags and structured data (JSON-LD) in the head |
 | `services/<name>/index.html` | The four service pages (listings, product images, ads and PPC, Shopify and workflows). Generated, see "Service pages" below |
+| `audit.css`, `audit.js` | The "Book a free audit" pop-up form (styles and behaviour). Loaded on every page |
 | `service.css` | Extra styling used only by the service pages (loads after `styles.css`) |
 | `styles.css` | All styling (brand colors, DM Sans and JetBrains Mono, animations, responsive rules) |
 | `app.js` | Activity feed, rolling numbers, lazy video, off-screen animation pausing and the draggable 3D Earth |
@@ -67,6 +68,20 @@ powershell -ExecutionPolicy Bypass -File build.ps1
 **Replacing a demo project with a real one:** put the image in `site/assets/work/`, add an entry to `$WorkItems` in `lib.ps1`, then swap the `DemoCard ...` line for `WorkCard 'your-id'` in the page's `work` block in `pages.ps1`. Demo cards are always labelled "Demo project" on the page.
 
 **What is real and what is a demo:** Behance projects, the two Shopify stores and the Upwork numbers and review quote are real and public. The Upwork numbers (Top Rated Plus, 99% Job Success, 5.0 from 46 reviews, 11K+ hours) come from the lead designer's public profile, and the page says so. Everything labelled "Demo project" is a sample made to show the process, not client work. The ads and workflow pages rely on demos for now because there are no live AI-automation case studies yet.
+
+## The "Book a free audit" pop-up
+
+Every link or button that says "Book a free audit" opens a pop-up form instead of leaving the page (home page, service pages, menu, footer). It asks for name, email, phone, store or website link, social links (optional), a short business description and what they want to automate (optional). A progress bar, a three-step rail and the button itself fill up as the visitor completes fields, and the button starts pulsing when everything is ready. Name, email, phone, store link and description are required. The link `yoursite/#audit` also opens it.
+
+**It does not send anywhere until you connect it.** Open `audit.js` and set ONE value in `CONFIG` near the top:
+
+| Setting | What happens |
+|---|---|
+| `endpoint: 'https://formspree.io/f/xxxxxxx'` | The answers are sent as JSON to a form service (Formspree works as is; sign up yourself and paste the form URL). Netlify, Getform and similar services also work if they accept a JSON POST. |
+| `email: 'you@yourdomain.com'` | The visitor's email app opens with the answers filled in, addressed to you. No service needed, but the visitor must press send. |
+| neither (current state) | Test mode. Nothing is sent, and the thank-you screen says "Test mode: this form is not connected yet". |
+
+Unsent forms are not saved anywhere. Whatever a visitor types is kept only in their own browser tab (so closing the pop-up by accident does not lose it) and is cleared after sending.
 
 ## How it behaves
 
